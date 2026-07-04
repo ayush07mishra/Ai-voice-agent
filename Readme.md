@@ -1,271 +1,311 @@
-
-Start
-   │
-   ▼
-1. Introduction & Customer Verification
-   │
-   ▼
-2. Ask Permission to Talk (2-minute confirmation)
-   │
-   ▼
-3. Inform Outstanding Amount
-   │
-   ▼
-4. Ask for Full Payment
-   │
-   ├── Yes → Payment Instructions → End
-   │
-   └── No
-        │
-        ▼
-5. Offer Waiver
-        │
-        ├── Yes → Payment Instructions → End
-        │
-        └── No
-             │
-             ▼
-6. Offer One-Time Settlement
-             │
-             ├── Yes → Settlement Process → End
-             │
-             └── No
-                  │
-                  ▼
-7. Offer EMI / Partial Payment
-                  │
-                  ├── Yes → EMI Arrangement → End
-                  │
-                  └── No
-                       │
-                       ▼
-8. Ask for Token Payment / Promise to Pay
-                       │
-                       ├── Customer Gives Date
-                       │        │
-                       │        ▼
-                       │   Save Commitment
-                       │
-                       ▼
-9. Closing
-
-
-
-State machine - > to maintain the flow ( if else ) so that AI will not give accurate answer
-
-
-ollama_client.py
-Purpose: Communicates with the Ollama server.
-If asked "What does it do?"
-Answer: It acts as a bridge between the Python application and the local Ollama model.
-
-intent.py
-Purpose: Understand customer replies.
-Example
-Customer says
-I don't have money.
-Intent : NO_PAYMENT
-Instead of checking hundreds of if-else conditions, AI understands the customer's intent.
-loader.py- LOAD JSON 
-
-flow/
-
-states.py - Contains conversation states.
-Example
-VERIFICATION
-↓
-PERMISSION
-↓
-OUTSTANDING
-↓
-WAIVER
-↓
-SETTLEMENT
-↓
-EMI
-↓
-TOKEN
-↓
-END
-
-Think of it as a roadmap.
-
-manager.py
-Stores
-Current State
-Example
-Current
-↓
-VERIFICATION
-Later
-Current
-↓
-OUTSTANDING
-It remembers where the conversation currently is.
-
-rules.py
-This file contains business logic.
-Example
-Customer says
-YES
-↓
-END
-
-Customer says
-NO
-↓
-Move to
-
-WAIVER
-Python makes all decisions.
-Not AI.
-scripts.py
-This is your SOP.
-It contains
-Verification Script
-Outstanding Script
-Waiver Script
-Settlement Script
-Each stage has its own predefined dialogue.
-prompt_builder.py
-Originally,
-
-this generated prompts for Ollama.
-
-If you moved to scripts,
-
-say
-
-This file was initially designed for dynamic prompt generation when using Ollama for dialogue generation. Later, I shifted to fixed business scripts to maintain compliance with the collection process.
-
-That sounds very professional.
-
-voice/
-tts.py
-
-Purpose
-
-Convert text into speech.
-
-Flow
-
-Text
-
-↓
-
-Piper
-
-↓
-
-wav file
-
-↓
-
-Speaker
-stt.py
-
-Speech To Text
-
-Microphone
-
-↓
-
-Text
-
-Currently optional.
-
-config.py
-
-Contains
-
-Model name
-
-Voice model
-
-Configuration
-
-Keeping configuration separate avoids changing code everywhere.
-
-prompts.py
-
-If asked
-
-"What is prompts.py?"
-
-Say
-
-It contains system prompts used to guide the AI model's behavior whenever Ollama is used.
-
-app.py
-
-This is the entry point.
-
-Everything starts here.
-
-Flow
-
-Load Customer
-
-↓
-
-Initialize Conversation
-
-↓
-
-Current State
-
-↓
-
-Generate Script
-
-↓
-
-Voice Output
-
-↓
-
-Receive Customer Reply
-
-↓
-
-Update State
-
-↓
-
-Repeat
-Complete Flow
-
-This is the most important answer.
-
+# 📞 AI-Powered Loan Collection Calling Agent
+
+An AI-powered outbound loan collection calling agent that simulates a real collection executive. The application follows a predefined collection workflow, interacts with customers, manages different conversation stages, and generates voice responses for a call-like experience.
+
+---
+
+## 🚀 Features
+
+- Customer Verification
+- Permission to Continue Call
+- Outstanding Amount Reminder
+- Waiver Offer
+- One-Time Settlement Offer
+- EMI Option
+- Token Payment Request
+- Call Closing
+- Voice Response using Text-to-Speech
+- State-Based Conversation Flow
+- Customer Data Management
+- Modular Python Architecture
+
+---
+
+## 📂 Project Structure
+
+```
+KreditBee-AI-Agent/
+│
+├── ai/
+│   ├── intent.py
+│   └── ollama_client.py
+│
+├── customer/
+│   ├── customer.json
+│   └── loader.py
+│
+├── flow/
+│   ├── manager.py
+│   ├── rules.py
+│   ├── scripts.py
+│   ├── states.py
+│   └── prompt_builder.py
+│
+├── voice/
+│   ├── tts.py
+│   └── stt.py
+│
+├── app.py
+├── config.py
+├── prompts.py
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# 🛠 Technologies Used
+
+| Technology | Purpose |
+|------------|---------|
+| Python | Backend Development |
+| Ollama | Local LLM |
+| Piper TTS | Text-to-Speech |
+| Streamlit | User Interface |
+| JSON | Customer Data Storage |
+
+---
+
+# ⚙️ Working Flow
+
+```
 Application Starts
 
+        │
+
+        ▼
+
+Load Customer Information
+
+        │
+
+        ▼
+
+Verification Stage
+
+        │
+
+        ▼
+
+Permission Stage
+
+        │
+
+        ▼
+
+Outstanding Amount
+
+        │
+
+        ▼
+
+Waiver Offer
+
+        │
+
+        ▼
+
+Settlement Offer
+
+        │
+
+        ▼
+
+EMI Offer
+
+        │
+
+        ▼
+
+Token Payment
+
+        │
+
+        ▼
+
+Closing
+```
+
+---
+
+# 📋 Conversation Flow
+
+### 1. Verification
+
+- Verify customer identity.
+
+Example:
+
+> Hello, am I speaking with Rahul Sharma?
+
+---
+
+### 2. Permission
+
+Introduce the collection executive.
+
+Example:
+
+> My name is Alex and I'm calling from KreditBee regarding your loan account.
+
+---
+
+### 3. Outstanding Amount
+
+Inform customer about outstanding payment.
+
+Example:
+
+> Your outstanding amount is ₹25,000.
+
+---
+
+### 4. Waiver
+
+Offer waiver if customer refuses.
+
+---
+
+### 5. Settlement
+
+Offer One-Time Settlement.
+
+---
+
+### 6. EMI
+
+Offer EMI if settlement is rejected.
+
+---
+
+### 7. Token Payment
+
+Request minimum token payment.
+
+---
+
+### 8. Closing
+
+End the conversation politely.
+
+---
+
+# 🧠 State Machine
+
+The application follows a predefined state machine.
+
+```
+VERIFICATION
+
+↓
+
+PERMISSION
+
+↓
+
+OUTSTANDING
+
+↓
+
+WAIVER
+
+↓
+
+SETTLEMENT
+
+↓
+
+EMI
+
+↓
+
+TOKEN
+
+↓
+
+CLOSING
+```
+
+The conversation cannot skip stages.
+
+---
+
+# 📁 Folder Description
+
+## ai/
+
+Contains AI-related modules.
+
+- Intent Detection
+- Ollama Communication
+
+---
+
+## customer/
+
+Contains customer records.
+
+- Customer JSON
+- Customer Loader
+
+---
+
+## flow/
+
+Contains business logic.
+
+- Conversation Manager
+- Rules Engine
+- Scripts
+- States
+
+---
+
+## voice/
+
+Voice processing.
+
+- Text-to-Speech
+- Speech-to-Text
+
+---
+
+# 🔄 Application Flow
+
+```
+Customer
+
+↓
+
+Application
+
 ↓
 
 Load Customer
 
 ↓
 
-Current Stage
-
-↓
-
-Generate Script
-
-↓
-
-Text To Speech
-
-↓
-
-Customer Listens
-
-↓
-
-Customer Replies
+Current State
 
 ↓
 
 Business Rules
+
+↓
+
+Generate Response
+
+↓
+
+Convert Text to Speech
+
+↓
+
+Customer Hears Voice
+
+↓
+
+Customer Reply
 
 ↓
 
@@ -274,135 +314,128 @@ Next State
 ↓
 
 Repeat
+```
 
-↓
+---
 
-Call Ends
-Why use a State Machine?
+# 🎤 Voice Support
 
-This is a favorite interview question.
+The project supports voice interaction using:
 
-Wrong approach
+- Piper Text-to-Speech
 
-AI decides everything
+The generated dialogue is automatically converted into speech to simulate a real phone conversation.
 
-Correct
+---
 
-Python
+# 📊 Customer Data
 
-↓
+Customer details are stored in JSON format.
 
-Current State
+Example:
 
-↓
+```json
+{
+  "name": "Rahul Sharma",
+  "phone": "9876543210",
+  "outstanding": 25000,
+  "waiver": 22000,
+  "settlement": 18000,
+  "emi": 5000
+}
+```
 
-Allowed Next State
+---
 
-↓
+# ▶️ Installation
 
-AI only helps
+Clone the repository
 
-State machines guarantee
+```bash
+git clone <repository-url>
+```
 
-correct order
-no skipped steps
-predictable behavior
-Why Python instead of AI?
+Create virtual environment
 
-Because business rules should never depend on AI.
+```bash
+python -m venv venv
+```
 
-For example,
+Activate environment
 
-If customer refuses payment,
+Windows
 
-we must
+```bash
+venv\Scripts\activate
+```
 
-Offer Waiver
+Install dependencies
 
-Not
+```bash
+pip install -r requirements.txt
+```
 
-Offer EMI
+---
 
-Python guarantees this.
+# ▶️ Run Application
 
-Why Ollama?
+Run the application
 
-Because
+```bash
+python app.py
+```
 
-Free
-Offline
-Local
-No API cost
-Fast
-Why Piper?
+Or launch the Streamlit interface
 
-Converts
+```bash
+streamlit run ui.py
+```
 
-Text
+---
 
-↓
+# 📌 Advantages
 
-Speech
+- Modular Architecture
+- Easy to Maintain
+- Offline Execution
+- Simple State Management
+- Reusable Components
+- Clear Separation of Business Logic
+- Easy Future Enhancements
 
-Offline.
+---
 
-Difference between Ollama and Piper
+# 🔮 Future Enhancements
 
-Very important.
+- Real Phone Call Integration (Twilio / Exotel)
+- Whisper Speech Recognition
+- SQL Database Support
+- Payment Gateway Integration
+- Call Recording
+- Analytics Dashboard
+- Multi-language Support
+- Customer Authentication
+- Admin Dashboard
 
-Ollama
+---
 
-Brain
+# 📈 Use Cases
 
-Piper
+- Loan Collection
+- Payment Reminder Calls
+- Banking Support
+- EMI Reminder
+- Debt Recovery Automation
+- Customer Follow-up
 
-Voice
-Difference between STT and TTS
+---
 
-STT
+# 👨‍💻 Author
 
-Voice
+Developed as an AI-powered collection calling agent demonstrating:
 
-↓
-
-Text
-
-TTS
-
-Text
-
-↓
-
-Voice
-If they ask "Why didn't you use ChatGPT API?"
-
-Answer
-
-I wanted a fully offline solution with no API cost, so I selected Ollama. It allows running open-source language models locally while maintaining user privacy and reducing operational cost.
-
-If they ask "What is the biggest challenge?"
-
-Answer
-
-The biggest challenge was maintaining a strict collection workflow while using AI. Large language models tend to improvise responses, so I separated the business logic from the AI logic. Python controls the workflow through a state machine, while AI is only responsible for understanding customer responses and generating natural language when required.
-
-If they ask "How can this project be improved?"
-
-Say:
-
-Connect with Twilio or Exotel for real phone calls.
-Replace typed customer responses with Whisper for speech recognition.
-Store customer data in a SQL database instead of JSON.
-Add authentication for agents.
-Integrate payment APIs.
-Add call recording and analytics.
-Build an admin dashboard to monitor calls and outcomes.
-My last piece of advice for your presentation
-
-Don't present it as a "chatbot".
-
-Present it as:
-
-"An AI-powered Collection Calling Agent that uses a state machine to enforce business rules, a local LLM (Ollama) for conversational intelligence, and a Text-to-Speech engine to simulate real outbound collection calls."
-
-That framing immediately makes the project sound more like an enterprise application than a simple chatbot. It also accurately reflects the architecture you've built.
+- Conversation State Management
+- AI Integration
+- Voice-Based Interaction
+- Modular Python Development
+- Business Rule Automation
