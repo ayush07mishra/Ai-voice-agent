@@ -3,7 +3,10 @@ from customer.loader import load_customer
 from flow.manager import ConversationManager
 from flow.prompt_builder import build_prompt
 from flow.rules import get_next_state
+from flow.scripts import get_script
 from flow.states import END, PAYMENT_INSTRUCTIONS, SAVE_COMMITMENT, CLOSING
+
+from flow.scripts import get_script
 
 
 customer = load_customer()
@@ -25,9 +28,11 @@ while True:
         break
 
     promise_date = manager.get_promise_date()
-    prompt = build_prompt(state, customer, last_reply=promise_date)
+    # prompt = build_prompt(state, customer, last_reply=promise_date)
 
-    reply = ask_ai(prompt)
+    # reply = ask_ai(prompt)
+    script = get_script(state, customer)
+    reply = get_script(state, customer)
     print(f"\nAgent:\n{reply}")
     from voice.tts import speak
     speak(reply)

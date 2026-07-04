@@ -5,8 +5,10 @@ import subprocess
 import winsound
 from gtts import gTTS
 
+# PIPER_PATH = r"C:\piper\piper.exe"
+# MODEL = r"C:\piper\hi_IN-voice.onnx"
 PIPER_PATH = r"C:\piper\piper.exe"
-MODEL = r"C:\piper\hi_IN-voice.onnx"
+MODEL = r"C:\piper\en_US-lessac-medium.onnx"
 
 
 def speak(text):

@@ -62,4 +62,4 @@ def get_next_state(current_state, customer_reply):
         else:
             return CLOSING, None
 
-    return END, None
+    return END, None
