@@ -3,7 +3,6 @@
 An AI-powered outbound loan collection calling agent that simulates a real collection executive. The application follows a predefined collection workflow, interacts with customers, manages different conversation stages, and generates voice responses for a call-like experience.
 
 ---
-
 ## 🚀 Features
 
 - Customer Verification
